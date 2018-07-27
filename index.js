@@ -20,7 +20,7 @@ app.post('/', async function ({ body }, response) {
     accessService.validation({ session });
 
     const sessionContext = contextService.get(body);
-    const message = await router.rout({sessionContext});
+    const message = await router.rout({ sessionContext });
     createResponse({ session, response, message });
 });
 

@@ -1,11 +1,11 @@
-const StepsEnum = require('../enums/StepsEnum');
+const ActionEnum = require('../enums/ActionEnum');
 
 module.exports = class SessionModel{
-    constructor({session, response}){
+    constructor({session, request}){
         return {
-            curentStep: StepsEnum.Default,
-            session_id: session.session,
-            response: response
+            currentAction: ActionEnum.Default,
+            session_id: session.session_id,
+            requests: [request]
         }
     }
 };
