@@ -28,8 +28,8 @@ function identifyAction({ command }) {
 
 function isActionCreateBill({ command }) {
   const commandLowerCase = command.toLowerCase();
-  const keywordsBill = ['счет', 'счета'];
-  const keywordsAction = ['создать', 'выставить'];
+  const keywordsBill = ['счет', 'счёта'];
+  const keywordsAction = ['созд', 'выстав', 'сформир', 'состав', 'сгенерир', 'сдел'];
 
   const isBill = find(keywordsBill, commandLowerCase);
   const isCreate = find(keywordsAction, commandLowerCase);
