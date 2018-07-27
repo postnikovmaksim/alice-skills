@@ -2,6 +2,7 @@ const ActionEnum = require('./enums/ActionEnum');
 const userService = require('./services/userService');
 const kontragentService = require('./services/kontragentService');
 const productService = require('./services/productService');
+const billService = require('./services/billService');
 
 module.exports = {
     rout({ sessionContext }){
@@ -20,15 +21,16 @@ module.exports = {
 
 async function defaultStep() {
     const userName = await userService.getUserName();
-    return Promise.resolve(`Здравствуйте, ${userName}, что вы хотели?`);
+    return Promise.resolve(`Здравствуйте, ${userName}, что Вы хотели?`);
 }
 
 async function createBillStep() {
-    kontragentService.getKontragent();
-    productService.getProduct();
+    const kontragent = await kontragentService.getKontragent();
+    const product = await productService.getProduct();
+    await billService.create({kontragent, products:[product]});
     return Promise.resolve(`Счет создан, что-то еще?`);
 }
 
 function notUnderstandStep() {
-    return Promise.resolve(`К сожалению, я вас не поняла. Повторите пожайлуста.`);
+    return Promise.resolve(`К сожалению, я Вас не поняла. Повторите пожайлуста.`);
 }

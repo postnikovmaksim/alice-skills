@@ -11,8 +11,11 @@ module.exports = {
               authorization: `Bearer ${tokenService.getToken()}`
           },
       }).then(resp => {
-          const response = JSON.parse(resp);
-          return response.ResourceList[0];
+          const kontragent = JSON.parse(resp).ResourceList[0];
+          return {
+              Id: kontragent.Id,
+              Name: kontragent.Name
+          };
       }).catch(e =>{
           console.log(e);
           return e;

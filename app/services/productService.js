@@ -11,8 +11,14 @@ module.exports = {
                 authorization: `Bearer ${tokenService.getToken()}`
             },
         }).then(resp => {
-            const response = JSON.parse(resp);
-            return response.ResourceList[0];
+            const product = JSON.parse(resp).ResourceList[0];
+            return {
+                StockProductId: product.Id,
+                Name: product.Name,
+                Unit: product.UnitOfMeasurement,
+                Count: 1, //пока-что одну штуку
+                Price: product.SalePrice
+            };
         }).catch(e =>{
             console.log(e);
             return e;
