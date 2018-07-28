@@ -11,7 +11,7 @@ app.use(express.json());
 
 app.post('/setToken/', function ({ body }, response) {
     tokenService.setToken({newToken: body.token});
-    response.json({message: `Новый токен успешно установлен = ${tokenService.getToken()}`});
+    response.json({text: `Новый токен успешно установлен = ${tokenService.getToken()}`});
 });
 
 app.post('/', async function ({ body }, response) {
