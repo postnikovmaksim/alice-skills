@@ -32,10 +32,7 @@ app.listen(port);
 
 function createResponse({session, response, message}) {
     response.json({
-        response: {
-            text: message,
-            end_session: false
-        },
+        response: Object.assign({end_session: false}, message),
         session: session,
         version: "1.0"
 })

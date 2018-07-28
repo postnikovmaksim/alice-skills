@@ -1,5 +1,6 @@
 const SessionModel = require('../models/SessionModel');
 const ActionEnum = require('../enums/ActionEnum');
+const identifyService = require('../services/identifyService');
 
 const activeSessions = [];
 
@@ -13,30 +14,8 @@ module.exports = {
     }
 
     lastSession.requests.push(request);
-    lastSession.currentAction = identifyAction({command: request.command});
+    lastSession.currentAction = identifyService.identifyAction({command: request.command});
 
     return lastSession;
   }
 };
-
-function identifyAction({ command }) {
-  if (isActionCreateBill({ command })){
-    return ActionEnum.CreateBill;
-  }
-  return ActionEnum.NotUnderstand;
-}
-
-function isActionCreateBill({ command }) {
-  const commandLowerCase = command.toLowerCase();
-  const keywordsBill = ['счет', 'счёта'];
-  const keywordsAction = ['созд', 'выстав', 'сформир', 'состав', 'сгенерир', 'сдел'];
-
-  const isBill = find(keywordsBill, commandLowerCase);
-  const isCreate = find(keywordsAction, commandLowerCase);
-
-  return isBill && isCreate;
-}
-
-function find(keywords = [], command) {
-   return keywords.some(k => command.indexOf(k) !== -1);
-}
