@@ -25,7 +25,7 @@ module.exports = {
     },
 
     identifyProduct: function ({ command }) {
-        const keywordsStart = ' на ';
+        const keywordsStart = ' на услугу ';
         const keywordsEnd = ' с ';
 
         return substring({ command, keywordsStart, keywordsEnd })
