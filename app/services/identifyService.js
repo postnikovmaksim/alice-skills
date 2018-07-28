@@ -56,10 +56,10 @@ function substring({ command, keywordsStart, keywordsEnd }) {
     if (startIndex === -1) {
         return Promise.reject();
     }
-    // todo организовать нормальную работу с пдежами
-    let endIndex = commandLC.indexOf(keywordsEnd) - 2; // Удаляем два символа для игнорирования падежа
+    // todo организовать нормальную работу с пдежами    // todo организовать нормальную работу с пдежами
+    let endIndex = commandLC.indexOf(keywordsEnd);
     if (endIndex === -1) {
-        endIndex = commandLC.length - 1;
+        endIndex = commandLC.length - 1 - 2;// Удаляем два символа для игнорирования падежа
     }
 
     return Promise.resolve(commandLC.substring(startIndex + keywordsStart.length, endIndex).trim());
