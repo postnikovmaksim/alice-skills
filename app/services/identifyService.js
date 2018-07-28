@@ -17,14 +17,14 @@ module.exports = {
         const keywordsStart = ' для ';
         const keywordsEnd = ' на ';
 
-        return substring({ command: command.toLowerCase(), keywordsStart, keywordsEnd })
+        return substring({ command, keywordsStart, keywordsEnd })
     },
 
     identifyProduct: function ({ command }) {
         const keywordsStart = ' на ';
         const keywordsEnd = ' с ';
 
-        return substring({ command: command.toLowerCase(), keywordsStart, keywordsEnd })
+        return substring({ command, keywordsStart, keywordsEnd })
     },
 };
 
@@ -51,15 +51,16 @@ function find(keywords = [], command) {
 }
 
 function substring({ command, keywordsStart, keywordsEnd }) {
-    const startIndex = command.indexOf(keywordsStart);
+    const commandLC = command.toLowerCase();
+    const startIndex = commandLC.indexOf(keywordsStart);
     if (startIndex === -1) {
         return Promise.reject();
     }
-
-    let endIndex = command.indexOf(keywordsEnd);
+    // todo организовать нормальную работу с пдежами
+    let endIndex = commandLC.indexOf(keywordsEnd) - 2; // Удаляем два символа для игнорирования падежа
     if (endIndex === -1) {
-        endIndex = command.length - 1;
+        endIndex = commandLC.length - 1;
     }
 
-    return Promise.resolve(command.substring(startIndex + keywordsStart.length, endIndex).trim());
+    return Promise.resolve(commandLC.substring(startIndex + keywordsStart.length, endIndex).trim());
 }
