@@ -4,18 +4,19 @@ const kontragentService = require('./services/kontragentService');
 const productService = require('./services/productService');
 const billService = require('./services/billService');
 const identifyService = require('./services/identifyService');
+const emailService = require('./services/emailService');
 
 module.exports = {
     rout({ sessionContext }){
         switch (sessionContext.currentAction){
             case ActionEnum.Default: {
-                return defaultAction();
+                return defaultAction({ sessionContext });
             }
             case ActionEnum.CreateBill: {
                 return createBillAction({ sessionContext });
             }
             case ActionEnum.SendEmail: {
-                return createSendEmail();
+                return createSendEmail({ sessionContext });
             }
             case ActionEnum.CloseSkills:{
                 return closeSkillsAction();
@@ -26,10 +27,10 @@ module.exports = {
     }
 };
 
-async function defaultAction() {
-    const userName = await userService.getUserName();
+async function defaultAction({ sessionContext }) {
+    sessionContext.userName = await userService.getUserName();
     return Promise.resolve({
-        text: `Здравствуйте, ${userName}, что Вы хотели?`
+        text: `Здравствуйте, ${sessionContext.userName}, что Вы хотели?`
     });
 }
 
@@ -54,7 +55,8 @@ async function createBillAction({ sessionContext }) {
     return Promise.resolve({ text: 'Счет создан, что-то еще?' });
 }
 
-function createSendEmail() {
+async function createSendEmail({ sessionContext }) {
+    await emailService.send({ sessionContext });
     return Promise.resolve({ text: 'Отправила, еще что-то?' });
 }
 

@@ -1,5 +1,4 @@
 const SessionModel = require('../models/SessionModel');
-const ActionEnum = require('../enums/ActionEnum');
 const identifyService = require('../services/identifyService');
 
 const activeSessions = [];
