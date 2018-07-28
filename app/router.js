@@ -51,7 +51,8 @@ async function createBillAction({ sessionContext }) {
     if (products.length === 0) return Promise.resolve({ text: 'Товар с таким названием не найден, попробуйте еще раз' });
     if (products.length > 1) return Promise.resolve({ text: 'К сожалению не полуться создать счет, так как товаров с таким названием больше одного. Могу ли я чем-то еще помочь?' });
 
-    await billService.create({kontragent: kontragents[0], products:[products[0]]});
+    const bill = await billService.create({kontragent: kontragents[0], products:[products[0]]});
+    sessionContext.lastCreateDocument.push(bill);
     return Promise.resolve({ text: 'Счет создан, что-то еще?' });
 }
 

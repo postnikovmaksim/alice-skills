@@ -13,7 +13,7 @@ module.exports = {
             "Price": product.Price
         }));
 
-        requestPromise({
+        return requestPromise({
             url: 'https://restapi.moedelo.org/accounting/api/v1/sales/bill',
             method: 'POST',
             headers: {
@@ -28,8 +28,6 @@ module.exports = {
                 "NdsPositionType": 3, // НДС сверху
                 "Items": items
             }
-        }).catch((e) =>{
-            console.log(e);
         })
     }
 };

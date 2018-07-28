@@ -5,7 +5,7 @@ module.exports = class SessionModel{
         this.currentAction = ActionEnum.Default;
         this.session_id = session.session_id;
         this.requests = [request];
-        this.lastCreateDocument = null;
+        this.lastCreateDocument = [];
         this.userName = '';
     }
 
