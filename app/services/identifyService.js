@@ -59,8 +59,8 @@ function substring({ command, keywordsStart, keywordsEnd }) {
     // todo организовать нормальную работу с пдежами    // todo организовать нормальную работу с пдежами
     let endIndex = commandLC.indexOf(keywordsEnd);
     if (endIndex === -1) {
-        endIndex = commandLC.length - 1 - 2;// Удаляем два символа для игнорирования падежа
+        endIndex = commandLC.length - 1;// Удаляем два символа для игнорирования падежа
     }
 
-    return Promise.resolve(commandLC.substring(startIndex + keywordsStart.length, endIndex).trim());
+    return Promise.resolve(commandLC.substring(startIndex + keywordsStart.length, endIndex - 2).trim());
 }
