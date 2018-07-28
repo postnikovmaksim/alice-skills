@@ -14,6 +14,9 @@ module.exports = {
             case ActionEnum.CreateBill: {
                 return createBillAction({ sessionContext });
             }
+            case ActionEnum.SendEmail: {
+                return createSendEmail();
+            }
             case ActionEnum.CloseSkills:{
                 return closeSkillsAction();
             }
@@ -49,6 +52,10 @@ async function createBillAction({ sessionContext }) {
 
     await billService.create({kontragent: kontragents[0], products:[products[0]]});
     return Promise.resolve({ text: 'Счет создан, что-то еще?' });
+}
+
+function createSendEmail() {
+    return Promise.resolve({ text: 'Отправила, еще что-то?' });
 }
 
 function closeSkillsAction() {

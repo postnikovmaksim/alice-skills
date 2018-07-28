@@ -10,6 +10,10 @@ module.exports = {
             return ActionEnum.CloseSkills;
         }
 
+        if (isActionSendEmail({ command })){
+            return ActionEnum.SendEmail;
+        }
+
         return ActionEnum.NotUnderstand;
     },
 
@@ -39,6 +43,13 @@ function isActionCreateBill({ command }) {
     return isBill && isCreate;
 }
 
+function isActionSendEmail({ command }) {
+    const commandLowerCase = command.toLowerCase();
+    const keywordsSend = ['отправ'];
+
+    return find(keywordsSend, commandLowerCase);
+}
+
 function isActionCloseSkills({ command }) {
     const commandLowerCase = command.toLowerCase();
     const keywordsClose = ['выйти', 'закрыть', 'закончить', 'все', 'всё', 'хватит'];
@@ -62,5 +73,7 @@ function substring({ command, keywordsStart, keywordsEnd }) {
         endIndex = commandLC.length - 1;// Удаляем два символа для игнорирования падежа
     }
 
-    return Promise.resolve(commandLC.substring(startIndex + keywordsStart.length, endIndex - 2).trim());
+    const string = commandLC.substring(startIndex + keywordsStart.length, endIndex).trim();
+    const first = string.split(' ')[0];
+    return Promise.resolve(first.substring(0, first.length - 2));
 }
