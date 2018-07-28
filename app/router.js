@@ -25,7 +25,13 @@ module.exports = {
 
 async function defaultAction() {
     const userName = await userService.getUserName();
-    return Promise.resolve({ text: `Здравствуйте, ${userName}, что Вы хотели?` });
+    return Promise.resolve({
+        text: `Здравствуйте, ${userName}, что Вы хотели?`,
+        card: {
+            type: 'BigImage',
+            description: 'Описание'
+        }
+    });
 }
 
 async function createBillAction({ sessionContext }) {
