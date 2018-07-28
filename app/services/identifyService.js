@@ -5,6 +5,11 @@ module.exports = {
         if (isActionCreateBill({ command })){
             return ActionEnum.CreateBill;
         }
+
+        if (isActionCloseSkills({ command })){
+            return ActionEnum.CloseSkills;
+        }
+
         return ActionEnum.NotUnderstand;
     },
 
@@ -32,6 +37,13 @@ function isActionCreateBill({ command }) {
     const isCreate = find(keywordsAction, commandLowerCase);
 
     return isBill && isCreate;
+}
+
+function isActionCloseSkills({ command }) {
+    const commandLowerCase = command.toLowerCase();
+    const keywordsClose = ['выйти', 'закрыть', 'закончить', 'все', 'всё', 'хватит'];
+
+    return find(keywordsClose, commandLowerCase);
 }
 
 function find(keywords = [], command) {

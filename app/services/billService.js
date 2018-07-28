@@ -1,3 +1,4 @@
+const moment = require('moment');
 const requestPromise = require('request-promise');
 const tokenService = require('./tokenService');
 
@@ -21,7 +22,7 @@ module.exports = {
             },
             json: true,
             body: {
-                "DocDate": "2018-07-27T00:00:00+03:00",
+                "DocDate": moment().format(),
                 "Type": 1, // Обычный счет
                 "KontragentId": kontragent.Id,
                 "NdsPositionType": 3, // НДС сверху
