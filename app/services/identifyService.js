@@ -52,7 +52,7 @@ module.exports = {
 
 function isActionCreateBill({ command }) {
     const commandLowerCase = command.toLowerCase();
-    const keywordsBill = ['счет', 'счёта'];
+    const keywordsBill = ['счет', 'счёт'];
     const keywordsAction = ['созд', 'выстав', 'сформир', 'состав', 'сгенерир', 'сдел'];
 
     const isBill = find(keywordsBill, commandLowerCase);
