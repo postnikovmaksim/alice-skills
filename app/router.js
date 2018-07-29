@@ -30,7 +30,8 @@ module.exports = {
 async function defaultAction({ sessionContext }) {
     sessionContext.userName = await userService.getUserName();
     return Promise.resolve({
-        text: `Здравствуйте, ${sessionContext.userName}, что Вы хотели?`
+        text: `Здравствуйте, ${sessionContext.userName}. Что Вы хотели?`
+        "tts": `Здравствуйте - ${sessionContext.userName}. - - Что Вы хотели?`,
     });
 }
 
