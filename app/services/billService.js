@@ -25,7 +25,8 @@ module.exports = {
                 "DocDate": moment().format(),
                 "Type": 1, // Обычный счет
                 "KontragentId": kontragent.Id,
-                "NdsPositionType": 3, // НДС сверху
+                "NdsPositionType": 3, // НДС сверху,
+                "UseStampAndSign": true,
                 "Items": items
             }
         })
