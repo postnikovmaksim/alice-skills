@@ -1,8 +1,14 @@
 const ActionEnum = require('../enums/ActionEnum');
 
+const predlog = ['в', 'без', 'до', 'из', 'к', 'на', 'по', 'о', 'от', 'перед', 'при', 'через', 'с', 'у', 'за', 'над', 'об', 'под', 'про', 'для'];
+
 module.exports = {
     identifyAction({ command }) {
         if (isActionCreateBill({ command })){
+            if (isActionCreateBillContract({ command })){
+                return ActionEnum.CreateBillContract;
+            }
+
             return ActionEnum.CreateBill;
         }
 
@@ -18,17 +24,29 @@ module.exports = {
     },
 
     identifyKontragent({ command }) {
-        const keywordsStart = ' для ';
-        const keywordsEnd = ' на ';
+        const keywords = ['с контрагентом', 'для контрагента', 'для', 'на', 'с'];
+        const excludeWords = ['услуга', 'услугой', 'услуги', 'услугами', 'товар', 'товаром', 'товары', 'товарами'];
+        const commandByWord = command.split(' ');
 
-        return substring({ command, keywordsStart, keywordsEnd })
+        const indexKeyWord = findIndexKeyWord({ commandByWord, keywords, excludeWords: excludeWords });
+        if(indexKeyWord !== -1 && commandByWord.length - 1 !== indexKeyWord){
+            return Promise.resolve(joinPhrase({ commandByWord, indexKeyWord }));
+        }
+
+        return Promise.reject('');
     },
 
     identifyProduct: function ({ command }) {
-        const keywordsStart = ' на услугу ';
-        const keywordsEnd = ' с ';
+        const keywords = ['на услугу', 'с услугой', 'на товар', 'с товаром'];
+        const excludeWords = [];
+        const commandByWord = command.split(' ');
 
-        return substring({ command, keywordsStart, keywordsEnd })
+        const indexKeyWord = findIndexKeyWord({ commandByWord, keywords, excludeWords: excludeWords });
+        if(indexKeyWord !== -1 && commandByWord.length - 1 !== indexKeyWord){
+            return Promise.resolve(joinPhrase({ commandByWord, indexKeyWord }));
+        }
+
+        return Promise.reject('');
     },
 };
 
@@ -41,6 +59,13 @@ function isActionCreateBill({ command }) {
     const isCreate = find(keywordsAction, commandLowerCase);
 
     return isBill && isCreate;
+}
+
+function isActionCreateBillContract({ command }) {
+    const commandLowerCase = command.toLowerCase();
+    const keywordsBillContract = ['договор'];
+
+    return find(keywordsBillContract, commandLowerCase);
 }
 
 function isActionSendEmail({ command }) {
@@ -61,19 +86,49 @@ function find(keywords = [], command) {
     return keywords.some(k => command.indexOf(k) !== -1);
 }
 
-function substring({ command, keywordsStart, keywordsEnd }) {
-    const commandLC = command.toLowerCase();
-    const startIndex = commandLC.indexOf(keywordsStart);
-    if (startIndex === -1) {
-        return Promise.reject();
-    }
-    // todo организовать нормальную работу с пдежами    // todo организовать нормальную работу с пдежами
-    let endIndex = commandLC.indexOf(keywordsEnd);
-    if (endIndex === -1) {
-        endIndex = commandLC.length - 1;// Удаляем два символа для игнорирования падежа
+function findIndexKeyWord({ commandByWord, keywords, excludeWords }) {
+     for (let i = 0; i < commandByWord.length; i = i + 1){
+         let keyIndex = 0;
+        for (let j = 0; j < keywords.length; j++) {
+            keyIndex = getKeyWordLastIndex({ key: keywords[j], commandByWord, index: i });
+            if (keyIndex !== -1) {
+                break;
+            }
+        }
+
+       if (keyIndex !== -1) {
+           i = keyIndex;
+           if(i < commandByWord.length - 1){
+               const isExcludeWords = excludeWords.some(exclude => commandByWord[keyIndex + 1] === exclude);
+               if(!isExcludeWords){
+                   return keyIndex;
+               }
+           }
+       }
     }
 
-    const string = commandLC.substring(startIndex + keywordsStart.length, endIndex).trim();
-    const first = string.split(' ')[0];
-    return Promise.resolve(first.substring(0, first.length - 2));
+    return -1;
+}
+
+function getKeyWordLastIndex({ key, commandByWord, index }){
+    const keyByWord = key.split(' ');
+    let keyWordLastIndex = index + keyByWord.length;
+
+    return key === commandByWord.slice(index, keyWordLastIndex).join(' ') ? keyWordLastIndex - 1 : -1;
+}
+
+function joinPhrase({ commandByWord, indexKeyWord }) {
+    const result = [];
+    let i = indexKeyWord + 1;
+
+    while (canTakeWords(commandByWord, i, predlog)) {
+        result.push(commandByWord[i]);
+        i++;
+    }
+    
+    return result.join(' ');
+}
+
+function canTakeWords(commandByWord, i, predlog) {
+    return i <= commandByWord.length - 1 && !predlog.some(pred => pred === commandByWord[i]);
 }
