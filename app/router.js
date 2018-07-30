@@ -1,4 +1,5 @@
 const ActionEnum = require('./enums/ActionEnum');
+const BillTypeEnum = require('./enums/BillTypeEnum');
 const userService = require('./services/userService');
 const kontragentService = require('./services/kontragentService');
 const productService = require('./services/productService');
@@ -13,7 +14,10 @@ module.exports = {
                 return defaultAction({ sessionContext });
             }
             case ActionEnum.CreateBill: {
-                return createBillAction({ sessionContext });
+                return createBillAction({ sessionContext, type: BillTypeEnum.Default });
+            }
+            case ActionEnum.CreateBillContract: {
+                return createBillAction({ sessionContext, type: BillTypeEnum.Contract  });
             }
             case ActionEnum.SendEmail: {
                 return createSendEmail({ sessionContext });
@@ -35,7 +39,7 @@ async function defaultAction({ sessionContext }) {
     });
 }
 
-async function createBillAction({ sessionContext }) {
+async function createBillAction({ sessionContext, type }) {
     const command = sessionContext.requests[sessionContext.requests.length - 1].command;
 
     const kontragentName = await identifyService.identifyKontragent({ command }).catch(e => e);
@@ -71,7 +75,7 @@ async function createBillAction({ sessionContext }) {
         tts: 'К сажал+ению  - не пол+учится созд+ать счет, - так как тов+аров с так+им назв+анием б+ольше одног+о, - а я не ум+ею выбир+ать. - - Могу ли я чемто еще помочь?'
     });
 
-    const bill = await billService.create({kontragent: kontragents[0], products:[products[0]]});
+    const bill = await billService.create({kontragent: kontragents[0], products:[products[0]], type});
     sessionContext.lastCreateDocument.push(bill);
     return Promise.resolve({
         text: 'Счет создан, что-то еще?',

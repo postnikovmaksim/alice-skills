@@ -3,7 +3,7 @@ const requestPromise = require('request-promise');
 const tokenService = require('./tokenService');
 
 module.exports = {
-    create({kontragent, products}){
+    create({kontragent, products, type}){
         const items = products.map(product => ({
             "StockProductId": product.StockProductId,
             "Type": 1, // Товар
@@ -23,7 +23,7 @@ module.exports = {
             json: true,
             body: {
                 "DocDate": moment().format(),
-                "Type": 1, // Обычный счет
+                "Type": type,
                 "KontragentId": kontragent.Id,
                 "NdsPositionType": 3, // НДС сверху,
                 "UseStampAndSign": true,
