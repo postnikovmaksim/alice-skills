@@ -24,6 +24,7 @@ module.exports = {
             body: JSON.stringify({
                 Attachments: [documentBaseId],
                 Format: 1,
+                UseStampAndSign: true,
                 KontragentEmail: mailInfo.KontragentEmail,
                 KontragentId: mailInfo.KontragentId,
                 Subject: `Документ от ${sessionContext.getFullName({ forming: FormingNamesEnum.Genitive })}`,
