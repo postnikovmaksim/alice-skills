@@ -3,6 +3,7 @@ const router = require('./app/router');
 const tokenService = require('./app/services/tokenService');
 const accessService = require('./app/services/accessService');
 const contextService = require('./app/services/contextService');
+const logService = require('./app/services/logService');
 
 const port = process.env.PORT || 3000;
 const app = express();
@@ -17,6 +18,7 @@ app.post('/setToken/', function ({ body }, response) {
 app.post('/', async function ({ body }, response) {
     const { session } = body;
 
+    logService.send({ body });
     accessService.validation({ session });
 
     const sessionContext = contextService.get(body);
